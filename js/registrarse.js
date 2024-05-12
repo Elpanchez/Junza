@@ -17,5 +17,5 @@ document.getElementById('realizar_registro').addEventListener('click',function(e
 })
 
 document.getElementById('volver_inicio').addEventListener('click', function(){
-    window.location.href='login.html';
+    window.location.href='/index.html';
 })

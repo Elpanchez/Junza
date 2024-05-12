@@ -11,6 +11,6 @@ document.getElementById('recuperar_contraseña').addEventListener('click', funct
     } else {
         alert('Contraseña cambiada correctamente!');
         // Redirige solo si las contraseñas coinciden
-        window.location.href = 'login.html';
+        window.location.href = '/index.html';
     }
 });
