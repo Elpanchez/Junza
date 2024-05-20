@@ -1,21 +1,26 @@
-document.getElementById('realizar_registro').addEventListener('click',function(event){
-    let correo = document.querySelector('input[type="email"]').value;
-    let usuario = document.querySelector('input[type="text"]').value;
-    let contraseña = document.querySelector('input[type="password"]').value;
-    let confirmarContraseña = document.querySelectorAll('input[type="password"]')[1].value;
+document.getElementById('registerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-    if (correo ==''||usuario==''||contraseña==''||confirmarContraseña==''){
+    let correo = document.getElementById('email').value;
+    let usuario = document.getElementById('username').value;
+    let contraseña = document.getElementById('password').value;
+    let confirmarContraseña = document.getElementById('confirmPassword').value;
+
+    if (correo === '' || usuario === '' || contraseña === '' || confirmarContraseña === '') {
         alert('Por favor, complete todos los campos');
-        event.preventDefault();
-    }else if (contraseña!==confirmarContraseña){
+    } else if (contraseña !== confirmarContraseña) {
         alert('Las contraseñas no coinciden!');
-        event.preventDefault();
-    }else{
-        alert('Registro Exitoso');
+    } else {
+        if (localStorage.getItem(usuario)) {
+            alert('El usuario ya existe!');
+        } else {
+            localStorage.setItem(usuario, contraseña);
+            alert('Registro Exitoso');
+            window.location.href = '../index.html';
+        }
     }
-    
-})
+});
 
-document.getElementById('volver_inicio').addEventListener('click', function(){
-    window.location.href='../index.html';
-})
+document.getElementById('volver_inicio').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});
