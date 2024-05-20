@@ -8,33 +8,33 @@
 </head>
 <body>
     <section>
-        <form>
-        <h1>Registro</h1>
-        <div class="inputbox">
-            <ion-icon name="mail-outline"></ion-icon>
-            <input type="email" required>
-            <label for="">Correo</label>
-        </div>
+        <form id="registerForm">
+            <h1>Registro</h1>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="email" id="email" required>
+                <label for="">Correo</label>
+            </div>
 
-        <div class="inputbox">
-            <ion-icon name="mail-outline"></ion-icon>
-            <input type="text" required>
-            <label for="">Usuario</label>
-        </div>
-        <div class="inputbox">
-            <ion-icon name="mail-outline"></ion-icon>
-            <input type="password" required>
-            <label for="">Contraseña</label>
-        </div>
-        <div class="inputbox">
-            <ion-icon name="mail-outline"></ion-icon>
-            <input type="password" required>
-            <label for="">Confirmar contraseña</label>
-        </div>
-        
-        <button class="registrar" href="./index.html" id="realizar_registro">Registrarse</button>
-        <button class="volver_inicio" id="volver_inicio">Volver</button>
-    </form>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="text" id="username" required>
+                <label for="">Usuario</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="password" id="password" required>
+                <label for="">Contraseña</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="mail-outline"></ion-icon>
+                <input type="password" id="confirmPassword" required>
+                <label for="">Confirmar contraseña</label>
+            </div>
+            
+            <button type="submit" class="registrar" id="realizar_registro">Registrarse</button>
+            <button type="button" class="volver_inicio" id="volver_inicio">Volver</button>
+        </form>
     </section>
     <script src="../js/registrarse.js"></script>
 </body>
