@@ -78,4 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dropdownContent.classList.remove('show');
             }
         }
+      });
+document.getElementById('cerrar_sesion').addEventListener('click', function() {
+    window.location.href = '../index.html';
 });
