@@ -63,3 +63,19 @@ document.addEventListener('DOMContentLoaded', () => {
       list.appendChild(listItem);
   }
 });
+
+    // Dropdown functionality
+    const dropdownButton = document.getElementById('dropdownButton');
+    const dropdownContent = document.getElementById('dropdownContent');
+
+    dropdownButton.addEventListener('click', () => {
+        dropdownContent.classList.toggle('show');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (!event.target.matches('#dropdownButton')) {
+            if (dropdownContent.classList.contains('show')) {
+                dropdownContent.classList.remove('show');
+            }
+        }
+});
