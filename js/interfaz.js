@@ -63,3 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       list.appendChild(listItem);
   }
 });
+
+document.getElementById('cerrar_sesion').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});
