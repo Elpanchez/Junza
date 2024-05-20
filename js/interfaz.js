@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const incomeList = document.getElementById('incomeList');
   const expenseForm = document.getElementById('expenseForm');
   const expenseList = document.getElementById('expenseList');
+  const saldoElement = document.getElementById('saldo');
 
   let totalIncome = 0;
   let totalExpenses = 0;
@@ -33,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const incomeName = document.getElementById('incomeName').value;
       const incomeAmount = parseFloat(document.getElementById('incomeAmount').value);
       totalIncome += incomeAmount;
-      updateChart();
+      updateChartAndBalance();
       addToList(incomeList, incomeName, incomeAmount);
       incomeForm.reset();
   });
@@ -43,20 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const expenseName = document.getElementById('expenseName').value;
       const expenseAmount = parseFloat(document.getElementById('expenseAmount').value);
       totalExpenses += expenseAmount;
-      updateChart();
+      updateChartAndBalance();
       addToList(expenseList, expenseName, expenseAmount);
       expenseForm.reset();
   });
 
-  function updateChart() {
-      myPieChart.data.datasets[0].data = [totalIncome, totalExpenses];
-      myPieChart.update();
-  }
+  function updateChartAndBalance() {
+    myPieChart.data.datasets[0].data = [totalIncome, totalExpenses];
+    myPieChart.update();
+    const balance = totalIncome - totalExpenses;
+    saldoElement.textContent = `Su saldo es $${balance.toLocaleString()}`;
+}
 
   function addToList(list, name, amount) {
       const listItem = document.createElement('div');
       listItem.classList.add('flex');
-      listItem.innerHTML = `<span>${name}</span>:  <span>$${amount.toFixed(2)}</span>`;
+      listItem.innerHTML = `<span>${name}</span> => <span>$${amount.toFixed(2)}</span>`;
       list.appendChild(listItem);
   }
 });
