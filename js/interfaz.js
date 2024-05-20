@@ -26,14 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const expenseList = document.getElementById('expenseList');
   const saldoElement = document.getElementById('saldo');
 
-  let totalIncome = 0;
-  let totalExpenses = 0;
+  let totalIncome = localStorage.getItem('totalIncome') ? parseFloat(localStorage.getItem('totalIncome')) : 0;
+  let totalExpenses = localStorage.getItem('totalExpenses') ? parseFloat(localStorage.getItem('totalExpenses')) : 0;
+
+  updateChartAndBalance()
 
   incomeForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const incomeName = document.getElementById('incomeName').value;
       const incomeAmount = parseFloat(document.getElementById('incomeAmount').value);
       totalIncome += incomeAmount;
+      localStorage.setItem('totalIncome', totalIncome.toString());
       updateChartAndBalance();
       addToList(incomeList, incomeName, incomeAmount);
       incomeForm.reset();
@@ -44,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const expenseName = document.getElementById('expenseName').value;
       const expenseAmount = parseFloat(document.getElementById('expenseAmount').value);
       totalExpenses += expenseAmount;
+      localStorage.setItem('totalExpenses', totalExpenses.toString());
       updateChartAndBalance();
       addToList(expenseList, expenseName, expenseAmount);
       expenseForm.reset();
