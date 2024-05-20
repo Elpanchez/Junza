@@ -4,74 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/interfaz.css">
-    <title>Document</title>
+    <title>Junza</title>
 </head>
-<body class="bg-teal-400 min-h-screen">
-    <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-3 space-y-4">
-        <button class="bg-white text-teal-800 font-bold py-2 px-4 rounded shadow">
-          Foro comunitario
-        </button>
-        <div>
-          <h1 class="text-white font-bold text-xl">Hola</h1>
-          <p class="text-white text-lg">Su saldo es $3.620.000</p>
-        </div>
-        <div class="chart-container ">
-          <canvas id="myPieChart"></canvas> 
-      </div>
-      </div>
-  
-      <div class="col-span-6">
-        <div class="grid grid-cols-2 gap-4">
-          <div class="bg-white p-4 shadow rounded">
-            <h2 class="font-bold text-lg">Ingresos</h2>
-  
-            <div class="mt-4">
-              <div class="flex justify-between items-center p-2">
-                <span>Nombre del ingreso: Quincena</span>
-                <span>$720.000</span>
-              </div>
-              <div class="flex justify-between items-center p-2">
-                <span>Otro ingreso: Parley</span>
-                <span>$4'300.000</span>
-              </div>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <button class="btn">Foro comunitario</button>
+            <div>
+                <h1 class="heading">Hola</h1>
+                <p class="subheading">Su saldo es $3.620.000</p>
             </div>
-          </div>
-          <div class="bg-white p-4 shadow rounded">
-            <h2 class="font-bold text-lg">Gastos</h2>
-  
-            <div class="mt-4">
-              <div class="flex justify-between items-center p-2">
-                <span>Nombre del gasto: Arriendo </span>
-                <span>$1'700.000</span>
-              </div>
-              <div class="flex justify-between items-center p-2">
-                <span>Alimentación</span>
-                <span>$700.000</span>
-              </div>
+            <div class="chart-container">
+                <canvas id="myPieChart"></canvas>
             </div>
-          </div>
         </div>
-      </div>
-  
-      <div class="col-span-3 space-y-4">
-        <button class="bg-white text-teal-800 font-bold py-2 px-4 rounded shadow self-end">
-          Logout
-        </button>
-        <div class="bg-white p-4 shadow rounded">
-          <h3 class="font-bold text-lg">Medios de contactos</h3>
-          <p>Correo:</p>
-          <p>Tel:</p>
-          <a href="#" class="text-teal-600">Preguntas Frecuentes</a>
-          <a href="#" class="text-teal-600">Perfil</a>
+
+        <div class="main-content">
+            <div class="grid">
+                <div class="card">
+                    <h2 class="card-title">Ingresos</h2>
+                    <form id="incomeForm">
+                        <input type="text" id="incomeName" placeholder="Nombre del ingreso" required>
+                        <input type="number" id="incomeAmount" placeholder="Cantidad" required>
+                        <button type="submit">Agregar</button>
+                    </form>
+                    <div id="incomeList"></div>
+                </div>
+                <div class="card">
+                    <h2 class="card-title">Gastos</h2>
+                    <form id="expenseForm">
+                        <input type="text" id="expenseName" placeholder="Nombre del gasto" required>
+                        <input type="number" id="expenseAmount" placeholder="Cantidad" required>
+                        <button type="submit">Agregar</button>
+                    </form>
+                    <div id="expenseList"></div>
+                </div>
+            </div>
         </div>
-        <button class="bg-white text-teal-800 font-bold p-4 rounded shadow">
-          <img src="https://placehold.co/24x24" alt="Settings" />
-        </button>
-      </div>
+
+        <div class="sidebar">
+            <button class="btn self-end">Logout</button>
+            <div class="card">
+                <h3 class="card-title">Medios de contactos</h3>
+                <p>Correo:</p>
+                <p>Tel:</p>
+                <a href="#" class="link">Preguntas Frecuentes</a>
+                <a href="#" class="link">Perfil</a>
+            </div>
+            <button class="btn">
+                <img src="https://placehold.co/24x24" alt="Settings" />
+            </button>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/interfaz.js"></script>
-  </body>
-  
+</body>
 </html>
