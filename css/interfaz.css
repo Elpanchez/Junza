@@ -83,3 +83,8 @@ input {
 .self-end {
   align-self: flex-end;
 }
+
+.grid {
+  display: flex;
+  justify-content: space-evenly;
+}
