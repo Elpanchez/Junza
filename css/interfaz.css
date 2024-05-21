@@ -11,16 +11,39 @@ body {
   padding: 1rem;
 }
 
+footer{
+  padding: 20px;
+  text-align: left;
+  position: fixed;
+  bottom: 0;
+  width: 98%;
+}
 .container {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   gap: 1rem;
+  
 }
 
-.sidebar, .main-content {
+.main-content {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+
+.sidebar_bienvenida{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sidebar{
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  top: 7px;
+  height: 120px;
 }
 
 .chart-container {
@@ -36,7 +59,12 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
 }
-
+.card_medios {
+  background-color: white;
+  padding: 1rem;
+  box-shadow: 0 6px 11px rgba(0, 0, 0, 0.651);
+  border-radius: 4px;
+}
 .card-title {
   font-weight: bold;
   font-size: 1.125rem;
