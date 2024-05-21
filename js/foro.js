@@ -111,3 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadQuestions();
     loadResponses();
 });
+
+document.getElementById('home').addEventListener('click', function() {
+    window.location.href = 'interfaz.html';
+});
