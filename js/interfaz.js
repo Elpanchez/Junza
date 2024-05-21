@@ -114,9 +114,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <form>
                 <input type="text" name="nombre" placeholder="Nombre del ${title.toLowerCase()}" required>
                 <input type="number" name="cantidad" placeholder="Cantidad" required>
-                <button type="submit">Agregar</button>
+                <button type="submit" class="btn">Agregar</button>
             </form>
-            <div></div>
+            <div class="montos"></div>
         `;
         grid.appendChild(newCard);
   

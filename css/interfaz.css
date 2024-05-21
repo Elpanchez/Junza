@@ -48,6 +48,10 @@ form {
   gap: 0.5rem;
 }
 
+.montos{
+  margin: 8px;
+}
+
 input {
   padding: 0.5rem;
   border: 1px solid #ccc;
