@@ -156,3 +156,11 @@ document.addEventListener('DOMContentLoaded', function() {
       updateChart();
   }
 });
+
+document.getElementById('foro').addEventListener('click', function() {
+    window.location.href = 'foro.html';
+});
+
+document.getElementById('cerrar_sesion').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});

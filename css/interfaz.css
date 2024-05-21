@@ -5,10 +5,24 @@
   font-family: 'Ubuntu', sans-serif;
 }
 
+:root {
+  --white: #fafafb;
+  --grisoscuro:#252b28;
+  --verdefirme:#5eb686;
+  --blue-dark:#d3d1d1;
+  --purple: #7934c7;
+  --eliminar: #b12323;
+  --otroverdefirme: #36ca8d;
+  --aguamarina: #38b2ac;
+
+}
+
 body {
-  background-color: #35bfb8;
-  min-height: 100vh;
-  padding: 1rem;
+   background: linear-gradient(to bottom,var(--aguamarina),var(--blue-dark));  
+   margin: 0;
+   min-height: 100vh;
+   padding: 1rem;
+
 }
 
 footer{
@@ -17,6 +31,10 @@ footer{
   position: fixed;
   bottom: 0;
   width: 98%;
+}
+
+h1{
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.651);;
 }
 .container {
   display: grid;
@@ -56,7 +74,7 @@ footer{
 .card {
   background-color: white;
   padding: 1rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 11px rgba(0, 0, 0, 0.651);
   border-radius: 4px;
 }
 .card_medios {
