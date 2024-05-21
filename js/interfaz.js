@@ -98,14 +98,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const newCard = document.createElement('div');
       newCard.classList.add('card');
       newCard.innerHTML = `
+            <div class="card">
           <h2 class="card-title">${title}</h2>
           <form>
               <input type="text" placeholder="Nombre del ${title.toLowerCase()}" required>
               <input type="number" placeholder="Cantidad" required>
               <button type="submit">Agregar</button>
           </form>
-          <div></div>
+          </div>
       `;
       grid.appendChild(newCard);
+      grid.insertBefore(newCard, grid.afterChild)
   }
 });
