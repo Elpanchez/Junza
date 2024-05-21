@@ -1,116 +1,149 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const ctx = document.getElementById('myPieChart').getContext('2d');
-  const myPieChart = new Chart(ctx, {
-      type: 'pie',
-      data: {
-          labels: ['Ingresos', 'Gastos'],
-          datasets: [{
-              label: 'Ingresos vs Gastos',
-              data: [0, 0],
-              backgroundColor: [
-                  'rgba(54, 162, 235, 0.6)', // Azul
-                  'rgba(255, 99, 132, 0.6)' // Rojo
-              ],
-              borderWidth: 1
-          }]
-      },
-      options: {
-          responsive: false,
-          maintainAspectRatio: false
-      }
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('myPieChart').getContext('2d');
+    let ingresos = 0;
+    let gastos = 0;
+    let data = [];
+    let labels = [];
+    let backgroundColors = [];
+  
+    const myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Patrimonio',
+                data: data,
+                backgroundColor: backgroundColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: false,
+            maintainAspectRatio: false
+        }
+    });
+  
+    const saldoElement = document.getElementById('saldo');
+  
+    function updateSaldo() {
+        const saldo = ingresos - gastos;
+        saldoElement.textContent = `Su saldo es $${saldo.toLocaleString()}`;
+    }
+  
+    function updateChart() {
+        myPieChart.update();
+        updateSaldo();
+    }
+  
+    function addTransaction(cardTitle, nombre, cantidad) {
+        const index = labels.indexOf(cardTitle);
+        if (index === -1) {
+            labels.push(cardTitle);
+            data.push(cantidad);
+            backgroundColors.push(getRandomColor());
+        } else {
+            data[index] += cantidad;
+        }
+        updateChart();
+    }
+  
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+  
+    const forms = document.querySelectorAll('.card form');
+  
+    forms.forEach(form => {
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const nombre = formData.get('nombre');
+            const cantidad = parseInt(formData.get('cantidad'));
+  
+            const cardTitle = form.closest('.card').querySelector('.card-title').textContent;
+  
+            if (cardTitle === 'Ingresos') {
+                ingresos += cantidad;
+            } else if (cardTitle === 'Gastos') {
+                gastos += cantidad;
+            }
+  
+            const div = document.createElement('div');
+            div.textContent = `${nombre}: $${cantidad.toLocaleString()}`;
+            form.nextElementSibling.appendChild(div);
+  
+            addTransaction(cardTitle, nombre, cantidad);
+            form.reset();
+        });
+    });
+  
+    const dropdownButton = document.getElementById('dropdownButton');
+    const dropdownContent = document.getElementById('dropdownContent');
+  
+    dropdownButton.addEventListener('click', function() {
+        dropdownContent.classList.toggle('show');
+    });
+  
+    window.addEventListener('click', function(event) {
+        if (!event.target.matches('#dropdownButton')) {
+            if (dropdownContent.classList.contains('show')) {
+                dropdownContent.classList.remove('show');
+            }
+        }
+    });
+  
+    const grid = document.getElementById('grid');
+    const optionButtons = document.querySelectorAll('.dropdown-item');
+  
+    optionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            duplicateCard(button.textContent);
+        });
+    });
+  
+    function duplicateCard(title) {
+        const newCard = document.createElement('div');
+        newCard.classList.add('card');
+        newCard.innerHTML = `
+            <h2 class="card-title">${title}</h2>
+            <form>
+                <input type="text" name="nombre" placeholder="Nombre del ${title.toLowerCase()}" required>
+                <input type="number" name="cantidad" placeholder="Cantidad" required>
+                <button type="submit">Agregar</button>
+            </form>
+            <div></div>
+        `;
+        grid.appendChild(newCard);
+  
+        const form = newCard.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const nombre = formData.get('nombre');
+            const cantidad = parseInt(formData.get('cantidad'));
+  
+            if (title === 'Ingresos') {
+                ingresos += cantidad;
+            } else if (title === 'Gastos') {
+                gastos += cantidad;
+            }
+  
+            const div = document.createElement('div');
+            div.textContent = `${nombre}: $${cantidad.toLocaleString()}`;
+            form.nextElementSibling.appendChild(div);
+  
+            addTransaction(title, nombre, cantidad);
+            form.reset();
+        });
+    }
   });
-
-  const incomeForm = document.getElementById('incomeForm');
-  const incomeList = document.getElementById('incomeList');
-  const expenseForm = document.getElementById('expenseForm');
-  const expenseList = document.getElementById('expenseList');
-  const saldoElement = document.getElementById('saldo');
-
-  let totalIncome = localStorage.getItem('totalIncome') ? parseFloat(localStorage.getItem('totalIncome')) : 0;
-  let totalExpenses = localStorage.getItem('totalExpenses') ? parseFloat(localStorage.getItem('totalExpenses')) : 0;
-
-  updateChartAndBalance()
-
-  incomeForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const incomeName = document.getElementById('incomeName').value;
-      const incomeAmount = parseFloat(document.getElementById('incomeAmount').value);
-      totalIncome += incomeAmount;
-      localStorage.setItem('totalIncome', totalIncome.toString());
-      updateChartAndBalance();
-      addToList(incomeList, incomeName, incomeAmount);
-      incomeForm.reset();
-  });
-
-  expenseForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const expenseName = document.getElementById('expenseName').value;
-      const expenseAmount = parseFloat(document.getElementById('expenseAmount').value);
-      totalExpenses += expenseAmount;
-      localStorage.setItem('totalExpenses', totalExpenses.toString());
-      updateChartAndBalance();
-      addToList(expenseList, expenseName, expenseAmount);
-      expenseForm.reset();
-  });
-
-  function updateChartAndBalance() {
-      myPieChart.data.datasets[0].data = [totalIncome, totalExpenses];
-      myPieChart.update();
-      const balance = totalIncome - totalExpenses;
-      saldoElement.textContent = `Su saldo es $${balance.toLocaleString()}`;
-  }
-
-  function addToList(list, name, amount) {
-      const listItem = document.createElement('div');
-      listItem.classList.add('flex');
-      listItem.innerHTML = `<span>${name}</span><span>$${amount.toFixed(2)}</span>`;
-      list.appendChild(listItem);
-  }
-
-  // Dropdown functionality
-  const dropdownButton = document.getElementById('dropdownButton');
-  const dropdownContent = document.getElementById('dropdownContent');
-
-  dropdownButton.addEventListener('click', () => {
-      dropdownContent.classList.toggle('show');
-  });
-
-  window.addEventListener('click', (event) => {
-      if (!event.target.matches('#dropdownButton')) {
-          if (dropdownContent.classList.contains('show')) {
-              dropdownContent.classList.remove('show');
-          }
-      }
-  });
-
-  // Add functionality to duplicate cards
-  const grid = document.getElementById('grid');
-  const optionButtons = document.querySelectorAll('.dropdown-item');
-
-  optionButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        console.log('Botón clickeado:', button.textContent);
-          duplicateCard(button.textContent);
-      });
-  });
-
-  function duplicateCard(title) {
-      const newCard = document.createElement('div');
-      newCard.classList.add('card');
-      newCard.innerHTML = `
-            <div class="card">
-          <h2 class="card-title">${title}</h2>
-          <form>
-              <input type="text" placeholder="Nombre del ${title.toLowerCase()}" required>
-              <input type="number" placeholder="Cantidad" required>
-              <button type="submit">Agregar</button>
-          </form>
-          </div>
-      `;
-      grid.appendChild(newCard);
-      grid.insertBefore(newCard, grid.afterChild)
-  }
-});
+  
+  
 
 document.getElementById('cerrar_sesion').addEventListener('click', function() {
     window.location.href = '../index.html';
