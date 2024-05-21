@@ -50,35 +50,58 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function updateChartAndBalance() {
-    myPieChart.data.datasets[0].data = [totalIncome, totalExpenses];
-    myPieChart.update();
-    const balance = totalIncome - totalExpenses;
-    saldoElement.textContent = `Su saldo es $${balance.toLocaleString()}`;
-}
+      myPieChart.data.datasets[0].data = [totalIncome, totalExpenses];
+      myPieChart.update();
+      const balance = totalIncome - totalExpenses;
+      saldoElement.textContent = `Su saldo es $${balance.toLocaleString()}`;
+  }
 
   function addToList(list, name, amount) {
       const listItem = document.createElement('div');
       listItem.classList.add('flex');
-      listItem.innerHTML = `<span>${name}</span> => <span>$${amount.toFixed(2)}</span>`;
+      listItem.innerHTML = `<span>${name}</span><span>$${amount.toFixed(2)}</span>`;
       list.appendChild(listItem);
   }
-});
 
-    // Dropdown functionality
-    const dropdownButton = document.getElementById('dropdownButton');
-    const dropdownContent = document.getElementById('dropdownContent');
+  // Dropdown functionality
+  const dropdownButton = document.getElementById('dropdownButton');
+  const dropdownContent = document.getElementById('dropdownContent');
 
-    dropdownButton.addEventListener('click', () => {
-        dropdownContent.classList.toggle('show');
-    });
+  dropdownButton.addEventListener('click', () => {
+      dropdownContent.classList.toggle('show');
+  });
 
-    window.addEventListener('click', (event) => {
-        if (!event.target.matches('#dropdownButton')) {
-            if (dropdownContent.classList.contains('show')) {
-                dropdownContent.classList.remove('show');
-            }
-        }
+  window.addEventListener('click', (event) => {
+      if (!event.target.matches('#dropdownButton')) {
+          if (dropdownContent.classList.contains('show')) {
+              dropdownContent.classList.remove('show');
+          }
+      }
+  });
+
+  // Add functionality to duplicate cards
+  const grid = document.getElementById('grid');
+  const optionButtons = document.querySelectorAll('.dropdown-item');
+
+  optionButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        console.log('Botón clickeado:', button.textContent);
+          duplicateCard(button.textContent);
       });
-document.getElementById('cerrar_sesion').addEventListener('click', function() {
-    window.location.href = '../index.html';
+  });
+
+  function duplicateCard(title) {
+      const newCard = document.createElement('div');
+      newCard.classList.add('card');
+      newCard.innerHTML = `
+          <h2 class="card-title">${title}</h2>
+          <form>
+              <input type="text" placeholder="Nombre del ${title.toLowerCase()}" required>
+              <input type="number" placeholder="Cantidad" required>
+              <button type="submit">Agregar</button>
+          </form>
+          <div></div>
+      `;
+      grid.appendChild(newCard);
+  }
 });
