@@ -111,3 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
       grid.insertBefore(newCard, grid.afterChild)
   }
 });
+
+document.getElementById('cerrar_sesion').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});
