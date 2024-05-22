@@ -5,7 +5,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let data = [];
     let labels = [];
     let backgroundColors = [];
-  
+
+    // Verificar que el elemento de contexto se haya obtenido correctamente
+    if (!ctx) {
+        console.error('No se pudo obtener el contexto del gráfico.');
+        return;
+    }
+
     const myPieChart = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -22,49 +28,49 @@ document.addEventListener('DOMContentLoaded', function() {
             maintainAspectRatio: false
         }
     });
-  
+
     const saldoElement = document.getElementById('saldo');
 
-     // Cargar datos del local storage
-     function loadFromLocalStorage() {
+    // Cargar datos del local storage
+    function loadFromLocalStorage() {
         const storedData = JSON.parse(localStorage.getItem('chartData')) || [];
         storedData.forEach(item => {
-          labels.push(item.label);
-          data.push(item.amount);
-          backgroundColors.push(item.color);
-    
-          if (item.type === 'Ingresos') {
-            ingresos += item.amount;
-          } else if (item.type === 'Gastos') {
-            gastos += item.amount;
-          }
-    
-          addTransactionToDOM(item.type, item.name, item.amount);
+            labels.push(item.label);
+            data.push(item.amount);
+            backgroundColors.push(item.color);
+
+            if (item.type === 'Ingresos') {
+                ingresos += item.amount;
+            } else if (item.type === 'Gastos') {
+                gastos += item.amount;
+            }
+
+            addTransactionToDOM(item.type, item.name, item.amount);
         });
         updateChart();
-      }
-    
-      function saveToLocalStorage() {
+    }
+
+    function saveToLocalStorage() {
         const storedData = labels.map((label, index) => ({
-          label: label,
-          amount: data[index],
-          color: backgroundColors[index],
-          type: label,
-          name: label
+            label: label,
+            amount: data[index],
+            color: backgroundColors[index],
+            type: label,
+            name: label
         }));
         localStorage.setItem('chartData', JSON.stringify(storedData));
-      }
+    }
 
     function updateSaldo() {
         const saldo = ingresos - gastos;
         saldoElement.textContent = `Su saldo es $${saldo.toLocaleString()}`;
     }
-  
+
     function updateChart() {
         myPieChart.update();
         updateSaldo();
     }
-  
+
     function addTransaction(cardTitle, nombre, cantidad) {
         const index = labels.indexOf(cardTitle);
         if (index === -1) {
@@ -75,8 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
             data[index] += cantidad;
         }
         updateChart();
+        saveToLocalStorage();
     }
-  
+
     function getRandomColor() {
         const letters = '0123456789ABCDEF';
         let color = '#';
@@ -85,24 +92,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return color;
     }
-  
+
     function handleFormSubmit(form, cardTitle) {
         form.addEventListener('submit', function(event) {
             event.preventDefault();
             const formData = new FormData(form);
             const nombre = formData.get('nombre');
             const cantidad = parseInt(formData.get('cantidad'));
-  
+
             if (cardTitle === 'Ingresos') {
                 ingresos += cantidad;
             } else if (cardTitle === 'Gastos') {
                 gastos += cantidad;
             }
-  
+
             const div = document.createElement('div');
             div.textContent = `${nombre}: $${cantidad.toLocaleString()}`;
             form.nextElementSibling.appendChild(div);
-  
+
             addTransactionToDOM(cardTitle, nombre, cantidad);
             addTransaction(cardTitle, nombre, cantidad);
             form.reset();
@@ -123,22 +130,22 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             console.error(`No se pudo encontrar la tarjeta con el id "card-${cardTitle.toLowerCase()}"`);
         }
-      }
-  
+    }
+
     const forms = document.querySelectorAll('.card form');
-  
+
     forms.forEach(form => {
         const cardTitle = form.closest('.card').querySelector('.card-title').textContent;
         handleFormSubmit(form, cardTitle);
     });
-  
+
     const dropdownButton = document.getElementById('dropdownButton');
     const dropdownContent = document.getElementById('dropdownContent');
-  
+
     dropdownButton.addEventListener('click', function() {
         dropdownContent.classList.toggle('show');
     });
-  
+
     window.addEventListener('click', function(event) {
         if (!event.target.matches('#dropdownButton')) {
             if (dropdownContent.classList.contains('show')) {
@@ -146,16 +153,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-  
+
     const grid = document.getElementById('grid');
     const optionButtons = document.querySelectorAll('.dropdown-item');
-  
+
     optionButtons.forEach(button => {
         button.addEventListener('click', () => {
             duplicateCard(button.textContent);
         });
     });
-  
+
     function duplicateCard(title) {
         const newCard = document.createElement('div');
         newCard.classList.add('card');
@@ -170,50 +177,52 @@ document.addEventListener('DOMContentLoaded', function() {
             <button class="delete-card btn">Eliminar</button>
         `;
         grid.appendChild(newCard);
-  
+
         const form = newCard.querySelector('form');
         handleFormSubmit(form, title);
-  
+
         const deleteButton = newCard.querySelector('.delete-card');
         deleteButton.addEventListener('click', function() {
             removeCard(newCard, title);
         });
         saveToLocalStorage();
     }
-  
+
     function removeCard(card, title) {
         const amounts = Array.from(card.querySelectorAll('.montos div')).map(div => {
             const parts = div.textContent.split(': $');
             return parseInt(parts[1].replace(',', ''));
         });
-  
+
         if (title === 'Ingresos') {
             amounts.forEach(amount => ingresos -= amount);
         } else if (title === 'Gastos') {
             amounts.forEach(amount => gastos -= amount);
         }
-  
+
         const index = labels.indexOf(title);
         if (index !== -1) {
             data.splice(index, 1);
             labels.splice(index, 1);
             backgroundColors.splice(index, 1);
         }
-  
+
         card.remove();
         updateChart();
+        saveToLocalStorage();
     }
 
     loadFromLocalStorage();
-  });
-  
-  document.getElementById('foro').addEventListener('click', function() {
-      window.location.href = 'foro.html';
-  });
-  
-  document.getElementById('cerrar_sesion').addEventListener('click', function() {
-      window.location.href = '../index.html';
-  });
+});
+
+document.getElementById('foro').addEventListener('click', function() {
+    window.location.href = 'foro.html';
+});
+
+document.getElementById('cerrar_sesion').addEventListener('click', function() {
+    window.location.href = '../index.html';
+});
+
   
 
 // Obtén el modal
