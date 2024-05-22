@@ -25,6 +25,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const saldoElement = document.getElementById('saldo');
 
+  // Cargar datos del local storage
+  function loadFromLocalStorage() {
+    const storedData = JSON.parse(localStorage.getItem('chartData')) || [];
+    storedData.forEach(item => {
+      labels.push(item.label);
+      data.push(item.amount);
+      backgroundColors.push(item.color);
+
+      if (item.type === 'Ingresos') {
+        ingresos += item.amount;
+      } else if (item.type === 'Gastos') {
+        gastos += item.amount;
+      }
+
+      addTransactionToDOM(item.type, item.name, item.amount);
+    });
+    updateChart();
+  }
+
+  function saveToLocalStorage() {
+    const storedData = labels.map((label, index) => ({
+      label: label,
+      amount: data[index],
+      color: backgroundColors[index],
+      type: label,
+      name: label
+    }));
+    localStorage.setItem('chartData', JSON.stringify(storedData));
+  }
+  
+
   function updateSaldo() {
       const saldo = ingresos - gastos;
       saldoElement.textContent = `Su saldo es $${saldo.toLocaleString()}`;
@@ -73,9 +104,26 @@ document.addEventListener('DOMContentLoaded', function() {
           div.textContent = `${nombre}: $${cantidad.toLocaleString()}`;
           form.nextElementSibling.appendChild(div);
 
+          addTransactionToDOM(cardTitle, nombre, cantidad);
           addTransaction(cardTitle, nombre, cantidad);
           form.reset();
       });
+  }
+
+  function addTransactionToDOM(cardTitle, nombre, cantidad) {
+    const card = document.getElementById(`card-${cardTitle.toLowerCase()}`);
+    if (card) {
+        const montosDiv = card.querySelector('.montos');
+        if (montosDiv) {
+            const div = document.createElement('div');
+            div.textContent = `${nombre}: $${cantidad.toLocaleString()}`;
+            montosDiv.appendChild(div);
+        } else {
+            console.error(`No se pudo encontrar el elemento con la clase "montos" en la tarjeta "${cardTitle}"`);
+        }
+    } else {
+        console.error(`No se pudo encontrar la tarjeta con el id "card-${cardTitle.toLowerCase()}"`);
+    }
   }
 
   const forms = document.querySelectorAll('.card form');
@@ -119,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
               <input type="number" name="cantidad" placeholder="Cantidad" required>
               <button type="submit" class="btn">Agregar</button>
           </form>
-          <div></div>
+          <div class="montos"></div>
           <button class="delete-card btn">Eliminar</button>
       `;
       grid.appendChild(newCard);
@@ -131,10 +179,11 @@ document.addEventListener('DOMContentLoaded', function() {
       deleteButton.addEventListener('click', function() {
           removeCard(newCard, title);
       });
+      saveToLocalStorage();
   }
 
   function removeCard(card, title) {
-      const amounts = Array.from(card.querySelectorAll('div')).map(div => {
+      const amounts = Array.from(card.querySelectorAll('.montos div')).map(div => {
           const parts = div.textContent.split(': $');
           return parseInt(parts[1].replace(',', ''));
       });
@@ -155,6 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
       card.remove();
       updateChart();
   }
+  loadFromLocalStorage();
 });
 
 document.getElementById('foro').addEventListener('click', function() {
