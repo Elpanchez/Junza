@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
       data: {
           labels: labels,
           datasets: [{
-              label: 'Ingresos vs Gastos',
+              label: 'Patrimonio',
               data: data,
               backgroundColor: backgroundColors,
               borderWidth: 1
