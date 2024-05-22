@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let data = [];
     let labels = [];
     let backgroundColors = [];
+    let cardsData = JSON.parse(localStorage.getItem('cardsData')) || []; // Para almacenar datos de las cards
   
     const myPieChart = new Chart(ctx, {
         type: 'pie',
@@ -25,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
     const saldoElement = document.getElementById('saldo');
   
-    // Cargar datos del local storage
     function loadFromLocalStorage() {
       const storedData = JSON.parse(localStorage.getItem('chartData')) || [];
       storedData.forEach(item => {
@@ -41,6 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
   
         addTransactionToDOM(item.type, item.name, item.amount);
       });
+  
+      // Cargar datos de las cards dinámicas
+      cardsData.forEach(card => {
+        duplicateCard(card.title, card.transactions);
+      });
+  
       updateChart();
     }
   
@@ -53,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
         name: label
       }));
       localStorage.setItem('chartData', JSON.stringify(storedData));
+      localStorage.setItem('cardsData', JSON.stringify(cardsData)); // Guardar datos de las cards
     }
   
     function updateSaldo() {
@@ -105,7 +112,20 @@ document.addEventListener('DOMContentLoaded', function() {
   
             addTransactionToDOM(cardTitle, nombre, cantidad);
             addTransaction(cardTitle, nombre, cantidad);
+  
+            // Guardar la transacción en la card correspondiente
+            const cardData = cardsData.find(card => card.title === cardTitle);
+            if (cardData) {
+                cardData.transactions.push({ nombre, cantidad });
+            } else {
+                cardsData.push({
+                    title: cardTitle,
+                    transactions: [{ nombre, cantidad }]
+                });
+            }
+  
             form.reset();
+            saveToLocalStorage(); // Guardar los datos después de cada transacción
         });
     }
   
@@ -156,9 +176,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
   
-    function duplicateCard(title) {
+    function duplicateCard(title, transactions = []) {
         const newCard = document.createElement('div');
         newCard.classList.add('card');
+        newCard.id = `card-${title.toLowerCase()}`;
         newCard.innerHTML = `
             <h2 class="card-title">${title}</h2>
             <form>
@@ -178,6 +199,14 @@ document.addEventListener('DOMContentLoaded', function() {
         deleteButton.addEventListener('click', function() {
             removeCard(newCard, title);
         });
+  
+        // Añadir transacciones existentes a la DOM
+        transactions.forEach(transaction => {
+            const div = document.createElement('div');
+            div.textContent = `${transaction.nombre}: $${transaction.cantidad.toLocaleString()}`;
+            newCard.querySelector('.montos').appendChild(div);
+        });
+  
         saveToLocalStorage();
     }
   
@@ -201,7 +230,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
   
         card.remove();
+        cardsData = cardsData.filter(card => card.title !== title); // Remover la card de cardsData
         updateChart();
+        saveToLocalStorage();
     }
   
     loadFromLocalStorage();
@@ -214,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('cerrar_sesion').addEventListener('click', function() {
       window.location.href = '../index.html';
   });
+  
   
 
 // Obtén el modal
